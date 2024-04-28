@@ -10,10 +10,19 @@ import messageRoute from "./routes/message.route.js";
 
 const app = express();
 
-app.use(cors({
-  origin: 'https://vasundara-real-estate.vercel.app/',
-  credentials:true
-}));
+const whitelist = ['https://vasundara-real-estate.vercel.app'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
